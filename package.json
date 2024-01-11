@@ -7,7 +7,10 @@
   "private": true,
   "dependencies": {
     "@sap/cds": "^7",
-    "express": "^4"
+    "express": "^4",
+    "@sap/cds-hana": "^2",
+    "@sap/xssec": "^3",
+    "passport": "^0"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^1",
@@ -15,9 +18,39 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "watch-risks": "cds watch --open risks/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-risks": "cds watch --open risks/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-mitigations": "cds watch --open mitigations/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "sapux": [
     "app/risks"
-  ]
+  ],
+  "cds": {
+    "requires": {
+      "[production]": {
+        "db": "hana",
+        "auth": "xsuaa"
+      },
+      "[development]": {
+        "auth": {
+          "kind": "mocked",
+          "users": {
+              "risk.viewer@tester.sap.com": {
+                  "password": "initial",
+                  "ID": "risk.viewer@tester.sap.com",
+                  "roles": [
+                    "RiskViewer"
+                  ]
+              },
+              "risk.manager@tester.sap.com": {
+                  "password": "initial",
+                  "ID": "risk.manager@tester.sap.com",
+                  "roles": [
+                    "RiskManager"
+                  ]
+              }
+          }
+        }
+      }
+    }
+  }
 }
